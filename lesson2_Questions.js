@@ -310,25 +310,88 @@
 // nothing, unlike call & apply, bind doesnt invoke the function used to call it. 
 // Instead it returns a new function that is permanently bound to the context argument
 
+// 18a 
+// what will the following code output?
+// let obj = {
+//   a: 2,
+//   b: 3,
+// };
+// function foo() {
+//   return this.a + this.b;
+// }
+// let bar = foo.bind(obj);
+// console.log(foo());
+// console.log(bar());
+
+// foo() returns undefined + undefined resulting in NaN
+// bar() returns 5
+
+// 18b 
+// what will the reutrn value output?
+// let positivity = {
+//   message: 'JavaScript makes sense!',
+// };
+// let negativity = {
+//   message: 'JavaScript makes no sense!',
+// };
+// function foo() {
+//   console.log(this.message);
+// }
+// let bar = foo.bind(positivity);
+// negativity.logMessage = bar;
+// negativity.logMessage();
+
+// it will log Javascript makes sense
+// bar is bound to positivity as the return value of the bind invocation 
+// so positivity's property message is logged 
+
+// #18c
+// let obj = {
+//   a: 'Amazebulous!',
+// };
+// let otherObj = {
+//   a: "That's not a real word!",
+// };
+// function foo() {
+//   console.log(this.a);
+// }
+// let bar = foo.bind(obj) 
+// bar.call(otherObj);  
+// bar is bound to obj as the return value of 
+// the bind invocation on foo
+// this returns Amazebulous
+
 // #19 
-// Dealing with context loss.  The code below should output: "Christopher Turk is a Surgeon"
+// Context Loss I - Method copied from object 
+// The code below should output: "Christopher Turk is a Surgeon"
 // without running the code, what will it output?  
 // How can you fix it, show two solutions 
-
-// let turk = {
-//   firstName: 'Christopher',
-//   lastName: 'Turk',
-//   occupation: 'Surgeon',
-//   getDescription() {
-//       return this.firstName + ' ' + this.lastName + ' is a '
-//                                   + this.occupation + '.';
-//   }
+// let john = {
+//   firstName: 'John',
+//   lastName: 'Doe',
+//   greetings() {
+//     console.log('hello, ' + this.firstName + ' ' + this.lastName);
+//   },
 // };
 
-// function logReturnVal(func, context) {
-//   let returnVal = func.call(context);
-//   console.log(returnVal);
-// }
+// john.greetings();         // context is john
+// let foo = john.greetings; // Strips context
+// foo();  
+///////////////// Solution I passing context to second function  
+// let john = {
+//   firstName: 'John',
+//   lastName: 'Doe',
+//   greetings() {
+//     console.log('hello, ' + this.firstName + ' ' + this.lastName);
+//   },
+// };
+
+// john.greetings();         // context is john
+// let foo = john.greetings.bind(john); // Strips context
+// foo();  
+
+
+
 
 // logReturnVal(turk.getDescription.bind(turk)); // here we lose the context of the getDescription 
 // methods passed as arguments to other functions lose their original context and get the implicit
@@ -365,7 +428,10 @@
 // TESgames.listGames();
 
 // #22 
+// Context Loss II - method passed to function as argument
 // fix the following code to prevent context loss
+// method passed to function as argument
+
 // function repeatThreeTimes(func) {
 //   func(); 
 // }
@@ -377,7 +443,6 @@
 //       console.log('hello, ' + this.firstName + ' ' + this.lastName);
 //     },
 //   };
-
 //   repeatThreeTimes(john.greetings); 
 // }
 // foo();
@@ -614,3 +679,28 @@
 // foo.incrementA();
 // foo.incrementA();
 // foo.incrementA();
+
+
+// const OPERATIONS = {
+//   '+': (num1, num2) => num1 + num2,
+//   '-': (num1, num2) => num1 - num2,
+//   '*': (num1, num2) => num1 * num2,
+//   '/': (num1, num2) => num1 / num2,
+// };
+
+// let getOperation = operation => OPERATIONS[operation];
+
+// let compute = function(operation, num1, num2) {
+//   return operation(num1, num2);
+// };
+
+// console.log(compute(getOperation('*', 18, 6)))
+// console.log(compute(getOperation('+'), 5, 9) === 14);
+
+// #26
+// update the following code so it logs the name of the constructor to which 
+// it belongs 
+
+// console.log("Hello");
+// console.log([1,2,3]);
+// console.log({name: 'Srdjan'});

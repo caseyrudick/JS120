@@ -195,3 +195,25 @@
 
 // bar.call(otherObj);
 // Amazebulous! because the bind is permanant for EC
+
+// #22 
+// fix the following code to prevent context loss
+// function repeatThreeTimes(func) {
+//   func(); // can't use func.call(john); john is out of scope
+//   func();
+//   func();
+// }
+
+// function foo() {
+//   let john = {
+//     firstName: 'John',
+//     lastName: 'Doe',
+//     greetings: function() {
+//       console.log('hello, ' + this.firstName + ' ' + this.lastName);
+//     },
+//   };
+
+//   repeatThreeTimes(john.greetings); // Strips context
+// }
+
+// foo();

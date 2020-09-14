@@ -179,11 +179,12 @@ function Dog3(name, breed, weight) {
   this.breed = breed;
   this.weight = weight; 
 }
-
+console.log('checking Dog3.hasOwnPrototype')
+console.log(Dog3.hasOwnProperty('bark'))
 // invoke it and then call .hasOwnProperty('bark') on the newly created objects
 
-let pepper = new Dog3('Pepper', 'Thai Poodle', 15)
-console.log(`Pepp says: ${pepper.bark()}`)
+let pepp = new Dog3('Pepper', 'Thai Poodle', 15)
+console.log(`Pepp says: ${pepp.bark()}`)
 
 // constructor prototypes and object prototypes
 // if bar is an object, then the object from which bar inherits is the object prototype
@@ -206,7 +207,7 @@ function Dog4(name, breed, weight) {
 }
 
 Dog4.prototype.bark = () => {
-  console.log(this.weight > 20 ? 'Woof!' : 'Loei loei!')
+  return this.weight > 20 ? 'Woof!' : 'Loei loei!'
 }
 
 let Ryry = new Dog4('Ryry', 'Thai Poodle', 6)
@@ -241,3 +242,46 @@ if (Ryry.constructor === Dog4) {
 } else {
     console.log('she cam from somewhere else')
 }
+
+// Although it's possible to reassign the constructor property to something else, be careful. 
+// Will learn about later, but here's an example:
+
+Dog4.prototype.constructor = function () {};
+Ryry.constructor === Dog4 // returns false
+Ryry instanceof Dog4 // true -- still returns true
+
+// OVERRIDING THE PROTOTYPE
+// Inherited methods doesnt mean the inherited object is stuck with those methods.  
+// Ex. we can change the bark method, just define a custom bark() on pepp
+
+pepp.bark = () => {
+  console.log('Super hiw ka') 
+}
+
+console.log(`Ryry: ${Ryry.bark()}`)
+pepp.bark()
+
+
+function Myconstructor() {} // this is just a function, doesnt become a constructor until invoked with new 
+//console.log(Object.getOwnPropertyNames(Myconstructor)) // returns ["length", "name", "arguments", "caller", "prototype"]
+// the prototype property is what is usually referred to as the 'Function Prototype', aka the `prototype` property of a function 
+//console.log(Myconstructor.prototype)
+
+// a constructor only has one prototype property, see above
+// this property points to an object that objects created from the constructor function delegates to
+
+
+// Mutating the Constructor's Prototype Property After Instantiating
+let myObj = new Myconstructor()
+console.log(Object.getPrototypeOf(myObj)) // returns the object pointed to by the constructor's prototype property
+// here's the mutation...
+Myconstructor.prototype.someOtherMethod = () => console.log('heyyy')
+myObj.someOtherMethod() // logs 'heyyy'
+// this is because the object assigned to the constructor's prototype is the object prototype for the instance myObj
+
+// Internal [[prototype]] property 
+// There is an internal [[prototype]] property, for functions this points to the prototype property of the `Function` class 
+// or constructor 
+// this is what JS uses to keep track of an object's prototype 
+// we can see what [[prototype]] is pointing to by using:
+Object.getPrototypeOf()

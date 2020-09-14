@@ -87,7 +87,7 @@
 
 
 ////////// Solution 1 /////////////
-// solution is to provide a variable assigned to this inside the outer function 
+// provide a variable assigned to this inside the outer function 
 // let obj = {
 //   a: 'hello',
 //   b: 'world',
@@ -238,14 +238,14 @@
 //////////// Solution IV ///////////////////////
 // Use optional 4th argument
 
-let obj = {
-  a: 'hello',
-  b: 'world',
-  foo: function() {
-    [1, 2, 3].forEach(function(number) {
-      console.log(String(number) + ' ' + this.a + ' ' + this.b);
-    }, this);
-  },
-};
+// let obj = {
+//   a: 'hello',
+//   b: 'world',
+//   foo: function() {
+//     [1, 2, 3].forEach(function(number) {
+//       console.log(String(number) + ' ' + this.a + ' ' + this.b);
+//     }, this);
+//   },
+// };
 
-obj.foo()
+// obj.foo()
