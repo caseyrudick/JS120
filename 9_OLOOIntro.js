@@ -32,6 +32,7 @@ car1.stop()
 car1.started // false
 
 // Now we must automate the make, model, year properties 
+// the most common technique is to use an `init` method on the prototype object
 
 let carPrototype1 = {
   start: function() {
@@ -44,7 +45,7 @@ let carPrototype1 = {
     this.make = make;
     this.model = model;
     this.year = year;
-  }
+  },
 }
 
 // this is how we create it
@@ -52,6 +53,7 @@ let car2 = Object.create(carPrototype1);
 car2.init('Toyota', 'Corolla', 2016)
 
 // although the init method still needs 2 lines of code to create a new car object...
+// init needs to return `this`
 
 let carPrototype2 = {
   // omit code for brevity
@@ -132,3 +134,16 @@ console.log(`neptune1: ${neptune1}`)
 
 let puddin2 = Object.create(PetPrototype).init('princess','Ry')
 console.log(puddin2)
+console.log(Object.getOwnPropertyNames(puddin2))
+
+// What is the difference between the two objects created from factory functions versus OLOO?
+
+// factory fucntion objects each have a copy of all the methods, whereas objects created with OLOO 
+// have a prototype object that contains the methods associated with the created object.  They all share the 
+// same methods.  Thus objects from OLOO are more efficient in terms of memory use
+
+// Private State
+// Objects created with the factory function can have private state
+// Any state stored in the body of a factory function, instead of the returned object is private to the returned object
+// they can be accessed or modified unless one of the object methods exposes the state
+// With OLOO, there is no way to define private state -- all of it can be accessed and modified by outside code

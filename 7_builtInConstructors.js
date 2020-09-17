@@ -134,7 +134,7 @@ Array.prototype.every.call(string, char => char === 'E') // true
 [].every.call(string,char => char === 'E')// true
 // this works with strings because strings have a length property and use index-based element access
 // so along with the method's use of `this`, this method borrow works
-[].filter.call('olives', val => val < 'm') // ['l','i','e']
+[].filter.call('olives', val => val < 'm') // ['  l','i','e']
 // here we see a returned array.  This is because call doesnt change the logic of the method, only the object 
 // the method uses for context
 let ingredients = 'olives'

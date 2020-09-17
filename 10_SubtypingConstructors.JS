@@ -1,4 +1,4 @@
-// we had learned befor the combination of constructors and prototypes 
+// we had learned before the combination of constructors and prototypes 
 // classes are like constructors and prototypes wrapped into one 
 
 
@@ -119,8 +119,16 @@ let personPrototype = {
     return `My name is ${this.name} and I'm ${this.age} years old.`;
   },
 }
-
 let will = Object.create(personPrototype) 
 will.name = 'William'
 will.age = 28
 will.toString()
+// will object inherits from the personPrototype object; will's [[prototype]] property refers to `personPrototype`
+
+
+// Pseudo-Classical Inheritance
+// aka constructor inheritance.  When people talk about inheritance in the context of JS, they normally
+// mean this one.  A constructor's prototype inherits from another constructor's prototype, that is, a sub-type 
+// inherits from a super-type.  Pseudo-classical refers to the fact that constructor inheritance mimics classes from 
+// other OOP languages, but doesnt actually use classes
+
