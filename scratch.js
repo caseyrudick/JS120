@@ -188,7 +188,7 @@ birdie.eatFood()
 console.log(Object.getPrototypeOf(birdie))  // entire object referenced by `bird`
 console.log(birdie.constructor.name) // Object
 console.log(birdie.constructor) // [Function: Object]
-console.log(birdie instanceof bird) // TypeError, right side of instance not callable
+//console.log(birdie instanceof bird) // TypeError, right side of instance not callable
 
 bird.scream = function() {
   console.log(`${this.nickname.toUpperCase()}`)
@@ -196,8 +196,38 @@ bird.scream = function() {
 birdie.scream()
 
 // Biggest differences: 
-// 1) cannot methods to instance's prototype object.  Instance, it is not an instanceof
+// 1) cannot add methods to instance's prototype object.  Instances, are not an instanceof
 
 
 
+// Polymorphism 
 
+class Quarterback {
+  play(something){
+    console.log(`I play ${something.qb}`)
+  }
+}
+class Runningback{
+  play(game) {
+    console.log(`I play ${game.rb}`)
+  }
+}
+class WideReceiver{
+  play(game){
+    console.log(`I play ${game.wr}`)
+  }
+}
+
+class Game {
+  constructor(qb, rb, wr){
+    this.qb = qb;
+    this.rb = rb;
+    this.wr = wr;
+  }
+  gamePlay(players) {
+    players.forEach(player => player.play(this))
+  }
+}
+
+let game = new Game("I play quarterb", "I play runningb", "I play wr")
+game.gamePlay([new Quarterback(), new Runningback(), new WideReceiver()])
