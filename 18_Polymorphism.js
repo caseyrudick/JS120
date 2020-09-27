@@ -85,4 +85,4 @@ class Wedding {
 }
 
 let wedding = new Wedding('guests', 'flowers', 'songs')
-wedding.prepare([new Chef(wedding), new Decorator(), new Musician()])
+wedding.prepare([new Chef(), new Decorator(), new Musician()])

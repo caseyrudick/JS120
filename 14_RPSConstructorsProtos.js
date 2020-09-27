@@ -17,14 +17,10 @@ function Human() {
 }
 
 Computer.prototype.choose = function() {
-    const choices = ['rock', 'paper', 'scissors']
-    let randomIndex = Math.floor(Math.random()*choices.length)
-    this.move = choices[randomIndex]
-  }  
-
-function Human() {
-  Player.call(this)
-}
+  const choices = ['rock', 'paper', 'scissors']
+  let randomIndex = Math.floor(Math.random()*choices.length)
+  this.move = choices[randomIndex]
+}  
 
 Human.prototype.choose = function() {
   let choice;

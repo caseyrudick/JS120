@@ -543,20 +543,202 @@
 // person.greeting("Hello. It's very nice to meet you."); // Hello. It's very nice to meet you
 // shouter.greeting("Hello my friend."); // HELLO MY FRIEND.
 
-
 // Answer //
-class Person {
-  greeting(text) {
-    console.log(text)
-  }
-}
-class Shouter extends Person {
-  greeting(text){
-    super.greeting(text.toUpperCase())
-  }
-}
+// class Person {
+//   greeting(text) {
+//     console.log(text)
+//   }
+// }
+// class Shouter extends Person {
+//   greeting(text) {
+//     return super.greeting(text.toUpperCase())
+//   }
+// }
+// let casey = new Person()
+// casey.greeting('everything alright?')
+// let puri = new Shouter()
+// puri.greeting("I'm mad")
 
-let person = new Person();
-let shouter = new Shouter();
-person.greeting("Hello. It's very nice to meet you."); // Hello. It's very nice to meet you
-shouter.greeting("Hello my friend."); // HELLO MY FRIEND.
+// #56
+// You modify the following classes so the instances work to produce the commneted out logs
+// BUT are only allowed one method to do this
+// class Person {
+//   constructor(name) {
+//     this.name = name;
+//   }
+//   gait() {
+//     return "strolls";
+//   }
+// }
+// class Cat {
+//   constructor(name) {
+//     this.name = name;
+//   }
+//   gait() {
+//     return "saunters";
+//   }
+// }
+// class Cheetah {
+//   constructor(name) {
+//     this.name = name;
+//   }
+//   gait() {
+//     return "runs";
+//   }
+// }
+// let mike = new Person("Mike");
+// console.log(mike.walk());
+// // "Mike strolls forward"
+// let kitty = new Cat("Kitty");
+// console.log(kitty.walk());
+// // "Kitty saunters forward"
+// let flash = new Cheetah("Flash");
+// console.log(flash.walk());
+// // "Flash runs forward"
+
+
+// ANSWER //
+// const locomotion = {
+//   walk(){
+//     return `${this.name} ${this.gait()} forward`
+//   }
+// }
+// class Person {
+//   constructor(name) {
+//     this.name = name;
+//   }
+//   gait() {
+//     return "strolls";
+//   }
+// }
+// class Cat {
+//   constructor(name) {
+//     this.name = name;
+//   }
+//   gait() {
+//     return "saunters";
+//   }
+// }
+// class Cheetah {
+//   constructor(name) {
+//     this.name = name;
+//   }
+//   gait() {
+//     return "runs";
+//   }
+// }
+// Object.assign(Person.prototype, locomotion)
+// Object.assign(Cat.prototype, locomotion)
+// Object.assign(Cheetah.prototype, locomotion)
+// let mike = new Person("Mike");
+// console.log(mike.walk());
+// // "Mike strolls forward"
+// let kitty = new Cat("Kitty");
+// console.log(kitty.walk());
+// // "Kitty saunters forward"
+// let flash = new Cheetah("Flash");
+// console.log(flash.walk());
+// // "Flash runs forward"
+
+// #57
+// Write classes and methods so the following logs will output:
+// P Hanson has adopted the following pets:
+// a cat named Butterscotch
+// a cat named Pudding
+// a bearded dragon named Darwin
+
+// B Holmes has adopted the following pets:
+// a dog named Molly
+// a parakeet named Sweetie Pie
+// a dog named Kennedy
+// a fish named Chester
+
+// P Hanson has 3 adopted pets.
+// B Holmes has 4 adopted pets.
+
+// class Pet {
+//   constructor(name, type) {
+//     this.name = name;
+//     this.type = type;
+//   }
+//   getinfo(){
+//     console.log(`A ${this.type} named ${this.name}`)
+//   }
+// }
+// class Owner {
+//   constructor (name) {
+//     this.name = name;
+//     this.pets = []
+//   }
+//   ownPet(pet) {
+//     this.pets.push(pet)
+//   }
+//   printPets(){
+//     this.pets.forEach(pet => pet.getinfo())
+//   }
+//   numberOfPets(){
+//     return this.pets.length
+//   }
+// }
+// class Shelter {
+//   constructor(name) {
+//     this.name = name
+//     this.owners = {}
+//   }
+//   adopt(human, pet){
+//     human.ownPet(pet)
+//     if (!this.owners[human.name]) {
+//       this.owners[human.name] = human
+//     }
+//   }
+//   printAdoptions(){
+//     for (let owner in this.owners) {
+//       console.log('')
+//       console.log(`${owner} has the following pets:`)
+//       this.owners[owner].printPets()
+//       console.log('')
+//       console.log('')
+//     }
+//   }
+// } 
+
+// let Chatuchak = new Shelter("Chatuchak")
+// let Ry = new Pet('RyRy', "Thai Poodle")
+// let Casey = new Owner("Casey")
+// let Purisa = new Owner("Pui")
+// let Pepp = new Pet("Pepp", "Royal Thai Poodle")
+// Chatuchak.adopt(Purisa, Pepp)
+// Chatuchak.adopt(Purisa, Ry)
+// Chatuchak.printAdoptions()
+// console.log(`${Purisa.name} has ${Purisa.numberOfPets()} adopted pets.`)
+
+// #58
+// class Banner {
+//   constructor(message) {
+//     this.message = message
+//   }
+
+//   displayBanner() {
+//     console.log([this.horizontalRule(), this.emptyLine(), this.messageLine(), this.emptyLine(), this.horizontalRule()].join("\n"));
+//   }
+
+//   horizontalRule() {
+//     return "+-" + "-".repeat(this.message.length) + "-+"
+//   }
+//   emptyLine() {
+//     return "| " + " ".repeat(this.message.length) + " |"
+//   }
+
+//   messageLine() {
+//     return `| ${this.message} |`
+//   }
+// }
+
+// let banner1 = new Banner('To boldly go where no one has gone before.');
+// banner1.displayBanner();
+// +--------------------------------------------+
+// |                                            |
+// | To boldly go where no one has gone before. |
+// |                                            |
+// +--------------------------------------------+
+
