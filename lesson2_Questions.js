@@ -704,3 +704,17 @@
 // console.log("Hello");
 // console.log([1,2,3]);
 // console.log({name: 'Srdjan'});
+
+function createBook(title, author, description) {
+  return {
+    title: title,
+    author: author,
+    description: description,
+    getDescription(){
+      console.log(`${this.title} was written by ${this.author}`)
+    }
+  }
+}
+
+let book1 = new createBook("Mythos","Stephen Fry","nada")
+book1.getDescription()
