@@ -1,148 +1,147 @@
-// // the return value of the method call on `obj` object sets `obj` as the 
-// // execution context of this.  the method is returning the value of this which is 
-// // referenced by the variable context.  
-// // let obj = {
-// //   func: function() {
-// //     return this;
-// //   },
-// // };
+// function Dog(name, breed, age) {
+//   this.name = name;
+//   this.breed = breed;
+//   this.age = age;
+// }
+// Dog.prototype.bark = function (){
+//   console.log(this.name + 'barks')
+// }
+// let Ry = new Dog('Ry', 'Poodle', 7)
+// console.log(Ry.constructor)  // [Function: dog]
+// console.log(Dog.prototype.constructor)  // 
 
-// // let context = obj.func();
+// let Dog = class{
+//   constructor(name, breed) {
+//     this.name = name;
+//     this.breed = breed;
+//   }
+// }
+// let ryry = new Dog('Rylee', 'Thai Poodle')
+// console.log(ryry instanceof Dog) // true
+// console.log(ryry.constructor) // Dog {}
 
-// // console.log(context);  // returns {func: [Function]: func}
 
-// // the variable message is declared without let var or const preceding it 
-// // which adds it as a property to the global object.  the function invocation of 
-// // deliver message has a execution context of the global object, which has 
-// // message as a property.  so it will log `hello` from the global scope
+// function Dog(name, breed) {
+//   this.name = name; 
+//   this.breed = breed;
+// }
 
-// // the function is assigned to varible without invocation, making it a method
-// // the method is invoked on the object foo.  The value of this is this obejct
-// // so the value of this.message is of the 'hello from the function scope'
+// Dog.prototype.bark = function() {
+//   console.log(`${this.name} says woof`)
+// }
+// let ry = new Dog('ry', 'thai poodle')
+// ry.bark()
 
-// // if we wish to use a specific execution context for a function call, we 
-// // must use call, bind, apply
+// class Animal{
+//   constructor(name) {
+//     this.name
+//   }
+//   sayHey(){
+//     console.log("Hey")
+//   }
+// }
+// class Dog extends Animal{
+//   constructor(name){
+//     super(name)
+//     this.numberOfLegs = 4
+//   }
+//   woof(){
+//     console.log("woof")
+//   }
+// }
 
-// // let foo = {
-// //   a: 1,
-// //   b: 2,
-// // };
+// class Poodle extends Dog{
+//   constructor(name){
+//     super(name)
+//     this.hair = 'frizzy'
+//   }
+//   angry(){
+//     console.log(`${this.name} is angry`)
+//   }
+// }
 
-// // let bar = {
-// //    a: 'abc',
-// //    b: 'def',
-// //    add: function() {
-// //      return this.a + this.b;
-// //    },
-// // };
+// let ry = new Poodle('Ry')
+// for (prop in ry) {
+//   console.log(prop)
+// }
+// ry.sayHey()
+// console.log(Object.getPrototypeOf(Dog))
+// console.log(ry instanceof Animal)
+// console.log(Object.keys(ry))
 
-// // console.log(bar.add.call(foo))
+// let obj1 = {ap: 1}
+// let objA = Object.create(obj1)
+// objA["foo"] = 1// {foo: 1, bar: 2, mehtod1(){console.log(foo)}}
+// for (prop in objA) {
+//   console.log(prop)
+// }
+// console.log('')
+// console.log(`objA: ${this.objA}`)
+// console.log(objA)
+// let objB = Object.create(objA)
+// console.log(objB instanceof objA)
 
-// function createPerson() {
+
+// object factories 
+// disadvantages: cannot determine type via instanceof as the instanceof operator looks to see if the object's constructor prototype object exists 
+// appears anywhere in the prototype chain
+// there is no constructor 
+// copies all methods to the newly created objects, requires lots of memory.  It does not make use of property delegation
+// syntax is like an object, but you use the return {} object literal 
+// the prototype object of the newly objects created will point to an empty object as it'll point to the default prototype
+// object of hte Object constructor
+
+// The default prototype is the prototype object of the Object constructor, Object.prototype.  This means the 
+// Object.prototype provides the default prototype
+
+// function createCar(make, model) {
 //   return {
-//     a: 1,
-//     hello(){
-//       console.log(`${this.a}`)
+//     make, 
+//     model,
+//     sayMake() {
+//       console.log(`${this.make}`)
 //     }
 //   }
 // }
 
-// let Casey = createPerson()
-// //console.log(Casey.prototype.constructor === createPerson())
-// //console.log(Casey instanceof createPerson())
+// let car1 = createCar('toyota', '4runner')
+// car1.sayMake()
 
+// constructors 
+// similar in structure to object factories. Differences:
+// begins with capital letter
+// makes referecnces to `this`
+// must be invoked with `new`
+// doesnt have explicit return statement 
+// events that occur when invoked with new: 
+// 1) creates new object 
+// 2) sets the value of the function prototype as the object pointed to by the object prototype property 
+// 3) sets execution context of this to the newly created obj
+// 4) invokes the function 
+// 5) returns the newly created object 
+
+// let dogPrototype = {
+//   bark() {
+//     console.log(this.name + " says woof!")
+//   }
+// }
 
 // function Dog(name, breed, weight) {
 //   this.name = name;
 //   this.breed = breed;
-//   this.weight = weight;
-
-//   this.bark = function() {
-//     console.log('Woof');
-//   };
+//   this.weight = weight; 
 // }
+// Object.setPrototypeOf(Dog, dogPrototype);
 
-// Dog.prototype = {
-//   sayHi() {
-//     console.log(`$${this.name}`)
-//   } 
-// }
+// let Rylee = new Dog('ry', 'poodle', 5)
+// console.log(Rylee instanceof Dog)  // true
 
-// let Rylee = new Dog('Ry','poodle', 5)
-// console.log(Rylee instanceof Dog)
-// console.log(Object.getPrototypeOf(Rylee))
-// // console.log(Dog.prototype)
+// classes 
+// same strategy as constructor prototype, except they have syntactic sugar to make it more evident
+// constructors are methods instead of standalone functions 
 
-// let dog = {name: "Rylee", speak(){console.log('woof!')}}
-// let Casey = {name: "Casey", pet: dog}
-// dog.speak() // "woof!"
-// Casey.pet.speak() // "woof!"
-
-// let obj = {
-//   methodInheritedThroughProtoChain(){
-//     console.log('Here we see inheritance through the prototype chain')
-//   }
-// }
-// let objA = {
-//   name: 'objA', 
-//   methodInheritedThroughPrototypeObject(){
-//     console.log(this.name + ' says hi!')
-//   },
-// }
-// Object.setPrototypeOf(objA, obj)
-// let objB = Object.create(objA)
-// objB.name = 'objB'
-// console.log(Object.getPrototypeOf(objB))
-// let objC = {
-//   name: 'objC', 
-//   sayName(){
-//     console.log("objC is now the prototype!")
-//   },
-//   methodCopiedFromMixin(){
-//     console.log(`objC has one more method available for objB to inherit`)
-//   }
-// }
-// let objD = {
-//   methodTestProtoypeChainAvailableToMixins(){
-//     console.log(`methods on prototype chain are available via mixins`)
-//   }
-// }
-// Object.setPrototypeOf(objC,objD)
-// Object.assign(objB, objC)
-// console.log(Object.getPrototypeOf(objB))
-// objB.methodInheritedThroughProtoChain()
-// obj.methodInheritedThroughPrototypeObject()
-// objB.methodCopiedFromMixin()
-// objB.methodTestProtoypeChainAvailableToMixins() //doesnt work!
-
-function Car(make, model, year) {
-  this.make = make;
-  this.model = model;
-  this.year = year;
-  this.started = false;
-  this.start = function(){
-    this.started = true
-  }
-  this.stop = function(){
-    this.started = false
-  }
-}
-Car.prototype.hello = function(){
-    console.log(`${this.make}`)
+class Poodle{
+  static temper = 'angry'
 }
 
-let car1 = new Car('Toyota', '4Runner', 2018)
-console.log(Object.getPrototypeOf(car1))
-
-function Dog(name, breed, age) {
-  this.name = name;
-  this.breed = breed;
-  this.age = age;
-}
-Dog.prototype.bark = function (){
-  console.log(this.name + 'barks')
-}
-
-let Ry = new Dog('Ry', 'Poodle', 7)
-
-console.log(Ry.constructor)
+console.log(Poodle.temper)

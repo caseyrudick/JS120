@@ -233,7 +233,7 @@ console.log(typeof Ryry)
 
 
 // a property of interest on the prototype object, is the constructor property: 
-console.log(Dog4.prototype.constructor)
+console.log(Dog4.prototype.constructor)  // [Function: Dog]
 
 // Similar to `instanceof` operator, `constructor` property lets us determine the type of an object
 
@@ -258,7 +258,7 @@ pepp.bark = () => {
   console.log('Super hiw ka') 
 }
 
-console.log(`Ryry: ${Ryry.bark()}`)
+
 pepp.bark()
 
 

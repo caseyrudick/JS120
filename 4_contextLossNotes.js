@@ -172,7 +172,23 @@
 // };
 
 // obj.foo()
+// WARNING DO NOT USE ARROW FUNCTIONS FOR METHODS!!!
+let obj = {
+  a: 5,
 
+  foo: () => {
+    console.log(this.a);
+  },
+};
+
+obj.foo(); // => undefined
+// The reason that this code doesn't work is that arrow functions always 
+// get the value of this from the surrounding context. In the code shown above, 
+// it certainly looks like the surrounding context is obj, so shouldn't this 
+// refer to obj? Despite appearances and what your logic tells you, that isn't 
+// the case.
+// THE SURROUNDING CONTEXT IS THE GLOBAL OBJECT.  The let statement in this example
+// is in the program's top-level code, so its context is the global object
 ////////////////// Context Loss III - Function As Argument ///////////////////
 // below, forEach calls a function expression.  Function expressions get context from global object
 
@@ -249,3 +265,87 @@
 // };
 
 // obj.foo()
+
+
+
+
+
+let contextLoss = {
+  let john = {
+    firstName: "John", 
+    LastName: "Doe ",
+    greeting(){
+      console.log(`Hello ${this.firstName} ${this.LastName} `)
+    }
+  }
+  john.greeting() // Hello John Doe (context is john)
+  let foo = john.greeting  // context is stripped
+  foo() // hello undefined undefined (context is now the global object)
+  // Solution: 
+  let foo = john.greeting.bind(john)
+  // 2) Nested function not using surrounding context
+  let obj = {
+    a: 'hello',
+    b: 'world',
+    foo: function(){
+      function bar(){
+        console.log(this.a + ' ' + this.b)
+      }
+      bar()  // bar is invoked as a standalone function!
+    },
+  }
+  obj.foo()
+  // Solution: Preserve Context with a Variable in the OuterScope, see 
+  let self = this
+  // Solution: Call Inner function with Explicit context
+  bar.call(this)
+  // Solution: Use bind on inner function 
+  foo: function(){
+    let bar = function(){
+      console.log(this.a + this.b)
+    }.bind(this)
+  }
+  // Solution Arrow function 
+  let bar = () => {console.log(this.a + this.b)}
+  // WARNING DO NOT USE ARROW FUNCTIONS AS METHODS ON AN OBJECT, THYE
+  // DONT WORK AS EXPECTED
+  // 3) Functions as arguments - see notes!
+  // Passing a function as an argument to another ufnction strips it of its execution context, 
+  // which means the function argument gets invoked with the context set to the global object, same issues 
+  // as copying a method from and object and using it as a bare function.  
+  
+  // f2) beware if you assign the method call to another variable without the invocation ().
+  //     this is because itll be called as a standalone function, and standalone function execution contexts are the 
+  //     global object
+  let baz = foo.bar
+  baz() // Object[global]
+  // g) explicit execution context.  .call allows us to call a function with the execution context of the argument 
+  //    .call invokes the function.  This is an important contrast to .bind() that returns a new function!
+  function logNum(){
+    console.log(this.num)
+  }
+  let obj = {
+    num: 42
+  }
+  logNum.call(obj) // logs 42
+  // g1) if the function contains arguments, remember apply works with arrays, but we can use ...args spread syntax with call instead
+  function sumNum(num1) {
+    return this.num + num1
+  }
+  let obj = {
+    num: 42
+  }
+  sumNum.call(obj, 5) // returns 47
+  // g2) hard binding 
+  function sumNum(num1){
+    return this.num + num1
+  }
+  let obj = {
+    num:42
+  }
+  let sumNum2 = sumNum.bind(obj)
+  sumNum2(5) // returns 47 FOREVER!
+  // Review 7 - Context loss 
+  // copied methods 
+  // inner function not using surrounding context
+  // function as argument 

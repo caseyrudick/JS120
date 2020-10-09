@@ -1,9 +1,9 @@
 // REVIEW 1 - OBJECTS, OBJECT FACTORIES, CONSTRUCTORS/PROTOTYPES, OLOO, ES6 CLASSES
 // 1) OBJECTS: 
-// one of the 8 fundamental types in JS (String, Number, Boolean, Null, Undefined, Object, BigInt, Symbol)
+// Objects are one of the 8 fundamental types in JS (String, Number, Boolean, Null, Undefined, Object, BigInt, Symbol)
 // They are a collection of properties where each property has a key and value.  While values can be any of the JS types, 
-// property keys are always trings.  If you define a property with a non-string key, it will first be converted to a string
-// When dealing with objects we are basically doing one of two things: settinga property or accessing a property.  We can do both
+// property keys are always strings.  If you define a property with a non-string key, it will first be converted to a string
+// When dealing with objects we are basically doing one of two things: setting a property or accessing a property.  We can do both
 // operations through the property key by using the bracket notation or the dot notation. Difference is brackets can take any UTF-8 
 // compatible string as the key, while the dot notation requires valid variable names
 obj["a-key"] = 4
@@ -17,10 +17,10 @@ for (prop in prop) {
   if (obj.hasOwnProperty(prop))  
 }
 // for/in iteration includes properties from the objects in its prototype chain.  Use `hasOwnProperty` to skip the prototype properties
-// // JS objects use an internal [[Prototype]] property to keep track of their prototype.  
+// JS objects use an internal [[Prototype]] property to keep track of their prototype.  
 // When you create an object with Object.create(), the new object's [[Prototype]] property gets assigned to the prototype object
 // Note [[Prototype]] is an internal property.  Cannot access it directly in your code. BUT you can access and replace
-// its value with Object function.  
+// its value with an Object method.  
 // Object.getPrototypeOf() 
 Object.getPrototypeOf(b) // { foo: 1, bar: 2 }
 // can set the prototype with:
@@ -30,12 +30,12 @@ let a = {
 }
 let b = {}
 Object.setPrototypeOf(b,a)
-// Objects hold a reference to their KEYWORD PROTOTYPE OBJECTS through their internal [[prototype]] property
+// Objects hold a reference to their PROTOTYPE OBJECTS through their internal [[prototype]] property
 // if the object's prototype changes in some way, the changes are observable in the inherting object as well
 
 // 2) OBJECT FACTORIES: 
-// serve two purposes: 1) returns objects that represent data of a specific type
-//                                        2) it reuses code 
+// serve two purposes: 1) returns objects that represent data of a specific type, even though you cannot determine the type lol.  They do not set the newly created object's prototype to a "function prototype" like constructors do
+//                     2) it reuses code 
 // They give us the ability to create objects of the same type by calling a function 
 // Disadvantages: 1) every object created has a copy of every method, too much disk space - DOESN'T MAKE USE OF PROTOTYPAL METHOD DELEGATION!
 //                2) no way to figure out its type (instance of) 
@@ -68,11 +68,14 @@ console.log(car1 instanceof createCar) // false. Since the instanceof operator t
 // 4) must be invoked with a preceding `new` - this is what treats the function as a constructor & returns the newly created object
 // Here are the steps that occur when you invoke a function with `new`:
 // 1) creates an entirely new object
+// 2) Sets the constructor's prototype object as the object pointed to by the newly created object's prototype property
 // 2) sets the value of `this` for use inside the function to point to the new object
-// 3) invokes the funciton.  Since `this` refers to the new object, we use it within the function to set the object's properties
+// 3) invokes the function.  Since `this` refers to the new object, we use it within the function to set the object's properties
 // and methods
 // 4) Once the function finishes running, `new` returns the new object
 // 5) without `new` itll invoke the constructor as a typical function.  Car() in the example below returns undefined
+// `new` is what sets the function prototype (aka constructor's prototype object) as the object pointed to by the newly created object's 
+// prototype property this is what permits method delegation!  And property lookup sequence in the prototype chain, aka prototypal inheritance 
 
 function Car(make, model, year) {
   this.make = make;
@@ -91,7 +94,7 @@ let car1 = new Car('Toyota', '4Runner', 2018)
 // CANNOT USE ARROW FUNCTIONS BECAUSE OF CONTEXT LOSS!
 let car = (make, model, year) => {}
 // cannot use concise sytnax
-this.start(){}
+this.start(){} // wont work!
 // Constructors that explicitly return objects, will return the object
 // wont happen for primitives
 // Determining Type 
@@ -115,8 +118,90 @@ function Dog(name, breed, weight) {
 // of the prototype property.  THE CONSTRUCTOR CREATES AN OBJECT THAT INHERITS FROM THE CONSTRUCTOR FUNCTION'S PROTOTYPE
 // this is called the constructor's prototype object aka the function prototype.  This becomes the object prototype!
 console.log(Dog.prototype.constructor) // [Function: Dog]
-let Ry = new Dog('Ry', 'Poodle', 7)
-console.log(Ry.constructor === Dog) // true
+let ry = new Dog('Ry', 'Poodle', 7)
+console.log(ry.constructor === Dog) // true
+
+// 4) CLASSES
+// Classes are syntatic sugar to create constructor and prototypes.
+// simplest way to create a class is with a CLASS DECLARATION
+// Different in that the constructor in aclass is now a method named `constructor` instead of 
+// being a standalone function 
+// instantiate a new object the same way with `new` keyword, but with classes you MUST use the `new` keyword
+
+class Animal{
+  constructor(species, color, weight) {
+    this.species = species;
+    this.color = color;
+    this.weight = weight;
+  }
+  sayName(){
+    console.log(`I am a ${this.name}`)
+  }
+}
+// there are class expressions as well 
+let Dog = class{
+  constructor(name, breed) {
+    this.name = name;
+    this.breed = breed;
+  }
+}
+// Two ways to identify an object's type: 
+// 1) Using `instanceof` keyword
+// 2) Using the `constructor` property on the object
+let ryry = new Dog('Rylee', 'Thai Poodle')
+console.log(ryry instanceof Dog) // true
+console.log(ryry.constructor) // [Function: Dog]
+console.log(ryry.constructor === Dog) // true
+// Classes as first-class citizens 
+// a first class citizen can be passed into a function, returned from a function and assigned to a variable.  
+// Example, you can pass classes into functions as arguments
+function createObject(classDefinition) {
+  return new classDefinition
+}
+class Foo{
+  say(){
+    console.log('hi')
+  }
+}
+let obj = createObject(Foo)
+obj.say() // logs "hi"
+// Classes are just functions, seen with typeof
+typeof Foo // returns "function"
+// Static Methods can be defined on classes by using the `static` keyword
+// These can be called directly on the class
+class Dog {
+  constructor(name, breed) {
+    this.name = name;
+    this.breed = breed;
+  }
+  static sayWoof(){
+    console.log('Woof!')
+  }
+}
+Dog.sayWoof() // logs "Woof!"
+
+// #5 OLOO
+// Objects linked to other objects uses prototypes and involves extracting properties common to all objects of the same type.  All objects
+// of fhe same type then inherit from that prototype
+let carPrototype = {
+  init(make, model, year) {
+    this.make = make;
+    this.model = model;
+    this.year = year;
+    return this  // needed for init to return a reference to the car object it was called on to chain create and init 
+  },
+  start(){
+    this.started = true;
+  },
+  stop(){
+    this.started = false
+  } 
+}
+let car1 = Object.create(carPrototype).init('Tesla', 'S', 2020)
+// OLOO inherits from a single prototype object. 
+// Dunno why but LS only compares OLOO to factory functions in regards to bulk creation objects of the same type.
+
+
 
 // REVIEW 2 - METHODS AND PROPETIES; INSTANCE AND STATIC MEMBERS
 // properties and methods that a constructor and prototype define are called MEMBERS of the 
@@ -140,14 +225,16 @@ Dog.averageLifeSpan = 20.
 Dog.getAverageLifeSpan = function() {
   return 20
 }
-
+class Poodle{
+  static temper = 'angry'
+}
 
 // REVIEW 3 - PROTOTYPAL & PSEUDO-CLASSICAL INHERITANCE
 // Prototypal inheritance is the only form of inheritance in JS and applies to any use of prototype objects to 
 // inherit properties.  The pseudo-classical patterns use constructor functions and a prototype object.  This can be done
 // directly, or by using the class keyword. 
-// If a function is used as a constructor, the returned object's [[Prototype]] will reference the constructor's
-// `prototype` property.  That lets us set properties on the constructor's prototype obejct so that ll objects 
+// If a function is used as a constructor, the returned object's internal [[Prototype]] will reference the constructor's
+// `prototype` property.  That lets us set properties on the constructor's prototype object so that ll objects 
 // created by the constructor will share them.  We call this the PSEUDO-CLASSICAL PATTERN OF OBJECT CREATION
 // The pseudo-classical pattern of object creation generates objects using a constructor function that defines state,
 // then defines shared behaviors on the constructor's prototype
@@ -174,7 +261,6 @@ let a = {
   propB: 2
 }
 let b = Object.create(a)
-
 
 
 // REVIEW 4 - ENCAPSULATION
@@ -204,7 +290,7 @@ class Bird {
 class Dog {
   constructor(name) {
     this.name = name
-  }
+  } 
   speak(){
     console.log(`My name is ${this.name}`)
   }
@@ -264,7 +350,7 @@ Casey.pet.speak() // "woof!"
 // Introducing objC and setting it as the prototype of objB, indicates we cannot have multiple prototype objects for any given object
 // objB has access to all the methods of objC, but no longer of objA
 // DELEGATE PROPERTIES/METHODS
-// here we see the inheritinng object doesnt receive any prop or methods of its own.  Instead, it KEYWORD: DELEGATES
+// here we see the inheritinng object doesnt receive any prop or methods of its own.  Instead, it DELEGATES
 // property and method access to its prototype.  
 // Even though objects DONT acquire any properties and methods through inheritance, they can still define them 
 // separately from the inheritance process
@@ -376,7 +462,7 @@ foo // "bar"
 
 
 // REVIEW 12 - METHOD AND PROPERTY LOOKUP SEQUENCE
-// When you access a property on a JS object, it firrst looks for an "own" property, with that name on
+// When you access a property on a JS object, it first looks for an "own" property, with that name on
 // the object.  If the obejct does not define the specified property, JS looks for it in the object's prototype
 // This process continues until it finds the property or it reaches Object.prototype.  If Object.prototype also 
 // doesnt define the property, the property access evaluates to undefined
@@ -477,7 +563,7 @@ sumNum2.call(newObj,5) // will still return 47
 // Object.create():
 // Specifically JS uses prototypal inheritance.  The object that you inherit properties and methods 
 // from is the prototype.  The function `Object.create` creates a new object that inherits properties from 
-// an exisitng object, called the KEYWORD: PROTOTYPE OBJECT as an argument and returns a new object that inherits 
+// an exisitng object, called the PROTOTYPE OBJECT as an argument and returns a new object that inherits 
 // properties from the prototype object.  The newly created object has access to all the properties and 
 // methods that the prototype object provides
 // When you create an object with Object.create(), the new object's [[Prototype]] property gets assigned to the 
@@ -491,7 +577,7 @@ let b = Object.create(a)
 // SEE INHERITANCE 
 // SEE [[Prototype]]
 // Object.assign()
-// allows you to copy properties or methods from one object to another without changing the target object's prototype
+// allows you to copy properties or methods from one object to another without changing the target object's prototype object
 // especially handy when you want to make use of Mix-ins, that is to say, JS doesnt permit multiple inheritance, 
 // one object factory can reuse another object factory by mixing the object returned by another factory function 
 // into itself by using Object.assign
@@ -504,7 +590,15 @@ let b = Object.create(a)
 
 
 // REVIEW 19 - READING OO CODE
-
+// OOP is a style of programming that involves JS objects to organize a program.  It is a programming paradigm
+// in which we think about a problem in terms of objects.  The way we think about a problem changes from 
+// a series of steps to a collection of objects that interact with each other.  The idea is to model how 
+// objects in the real world interact.  A real-world object like a car, for example, has state -- properties --
+// like color, number of doors and fuel-level amongst others.  It also has behavior; it can be driven, etc.  That's how 
+// we think about problems in OOP: set of objects with state and behavior. This allows programmers to think ata higher level of 
+// abstraction.  Allows programmers to reduce dependencies and makes maintenance easier.  OOP can make our code more flexible,
+// easy to understand, easy to change.  Although These programs are often much larger than the non-OOP equivalent.  It can lead to 
+// less efficient code; require more memory, more disk space and computing power. 
 
 
 
@@ -592,91 +686,22 @@ let car = {
   }
 }
 
-
-// REVIEW 9 - CONSTRUCTOR/PROTOTYPES
-// Similar to factory functions, though it doesnt return an explicit object.  It uses `this` to set 
-// the object's properties and methods
-
-// e) strict mode - "use strict"  
-//    assigns this to undefined and not global
-// Review 1 - Object.prototype methods
-// a) setting prototype: 
-let a = {}
-let b = Object.create(a) 
-// b) review object prototype
-Object.getPrototypeOf(b) // returns {}, prototype is the object referenced by variable `a`.  The internal [[Prototype]] 
-//                       // property of JS objects, here b is pointing to the object referenced by a
-a.isPrototypeOf(b) // returns true. determines whether a is in the prototype chian of b
-Object.getOwnPropertyNames(b) // will not return properties of a.  This is because objects don't AQUIRE properties 
-//                            // and methods, through inheritance 
-// c) instanceof 
-console.log(b instanceof a) // TypeError, cannot do this with object literals, benefits of constructors/classes
-// d) set prototype 
-Object.setPrototypeOf(target, source) // overwrites the prexisting proto. In this case, its the default Object.prototype
-
-// Review 2 - Constructor/Prototypes
-// setting the prototype of a constructor function to include multiple methods instead of one by one
-// (one by one: 
-function functionConstructor(name){
-  this.name = name
+// Review MISC7 - ACCESSING CONSTRUCTOR PROPERTY 
+// instances have a constructor property
+// constructors have a prototype property with a constructor property
+function Dog(name, breed, age) {
+  this.name = name;
+  this.breed = breed;
+  this.age = age;
 }
-functionConstructor.prototype.methodName = function(){
-  console.log(`${this.name}`)
-}//method()})
-// multiple: let constrProto = {
-//   method1() {},
-//   method2() {}
-// }
-// let 
-
-// Review 3 - Object Factories VS ConstructorFunctions - `this`
-// object factories do not use this in the state portion, whereas constructors do
-function objectFactory(name) {
-  return {
-    name: name
-  }
+Dog.prototype.bark = function (){
+  console.log(this.name + 'barks')
 }
-function ConstructorProto (name) {
-  this.name = name 
-}
+let ry = new Dog('Ry', 'Poodle', 7)
+console.log(ry.constructor)  // [Function: dog]
+Dog.prototype.constructor  // [Function: dog]
 
 
-// Question 1 - Object Factories
-// createHuman.prototype = Object.assign(createPlayer) - does it work to place this, 
-// following the function, i.e. outside scope of function?
 
-// Question 2 - Static properties
-// which style uses them? Classes ?
-
-// Question 3 - prototypes of constructors are object literals
-// are the prototypes of factories object literals or functions or both?
-
-// Question 4 - how do you set the prototype of an object factory, I'm having a hard time figuring out 
-// how to perform the equivalent of super() seen in classes to object factories
-// DO WE JUST UNDERSTAND REUSING ANOTHER OBJECT FACTORY VIA MIXING --> OBJECT.ASSIGN
-
-// Question 5 - where do call, bind, apply fit in?  Just factory functions or also constructor functions 
-
-// Question 6 - closure?
-
-
-// Review 2 - Iterating over objects with protos
-// for/in - will return inherited properties as well
-// .hasOwnProperty() will prevent that also Object.keys()
-
-// Review 4 - function expressions, first class functions, hoisting, anonymous functions, typeof function value 
-// remember if you want to use functions as values, you should not invoke them
-// a) anonymous functions 
-let prompt = function(){} // this is anonymous, along with all arrow functions.  
-// Arrow functions are either immediately invoked, assigned to variables or properties, or passed around as arguments
-// b) first class functions 
-// can be assigned to variables, passed as arguments, or returned from another function
-function logNum(num) {
-  console.log(num)
-}
-[1,2,3].forEach(logNum) // NOT [1,2,3].forEach(logNum()) - TypeError: undefined is not a function 
-// logNum is passed as an argument 
-// this example above shows the 
-// c) typeof function value
-let myFunc = function(){}
-typeof myFunc // "function"
+// strict mode - "use strict"  
+//  assigns this to undefined and not global
